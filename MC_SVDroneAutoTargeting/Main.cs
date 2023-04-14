@@ -1,8 +1,7 @@
 ﻿using BepInEx;
-using BepInEx.Configuration;
 using HarmonyLib;
-using System;
 using UnityEngine;
+using System.Linq;
 
 namespace MC_SVDroneDefensiveTargeting
 {
@@ -11,7 +10,7 @@ namespace MC_SVDroneDefensiveTargeting
 	{
 		public const string pluginGuid = "mc.starvalor.dronedefensivetargeting";
 		public const string pluginName = "SV Drone Defensive Targeting";
-		public const string pluginVersion = "1.0.0";
+		public const string pluginVersion = "1.0.1";
 
 		public void Awake()
 		{
@@ -31,7 +30,8 @@ namespace MC_SVDroneDefensiveTargeting
 			if (__instance.ownerSS == null)
 				__instance.ownerSS = __instance.owner.GetComponent<SpaceShip>();
 
-			Collider[] array = Physics.OverlapSphere(__instance.owner.position, 200f, 512);
+            Collider[] array = Physics.OverlapSphere(__instance.owner.position, 200f, 512);
+			array = array.OrderBy(c => (__instance.owner.position - c.transform.position).sqrMagnitude).ToArray();
 			Transform x = null;
 			float num = 9999f;
 			for (int i = 0; i < array.Length; i++)
